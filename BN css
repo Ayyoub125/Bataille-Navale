@@ -1,0 +1,101 @@
+/* Style global */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+#game-info {
+    margin: 20px 0;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Style des grilles */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(10, 40px);
+    grid-template-rows: repeat(10, 40px);
+    gap: 2px;
+    margin: 20px auto;
+    width: 420px;
+    height: 420px;
+    border: 2px solid #333;
+    border-radius: 10px;
+    background-color: #e0e0e0;
+}
+
+.grid div {
+    width: 40px;
+    height: 40px;
+    background-color: #a9c9f5; /* Couleur de base pour les cases */
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.grid div:hover {
+    background-color: #8bbef7; /* Changer de couleur au survol */
+}
+
+/* Couleurs spécifiques pour les états des cases */
+.grid .ship {
+    background-color: #333; /* Bateau */
+}
+
+.grid .hit {
+    background-color: #e74c3c; /* Touché */
+}
+
+.grid .miss {
+    background-color: #ecf0f1; /* Manqué */
+}
+
+.grid .empty {
+    background-color: #a9c9f5; /* Case vide (par défaut) */
+}
+
+/* Boutons */
+.button {
+    padding: 12px 30px;
+    font-size: 16px;
+    margin: 15px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button:hover {
+    background-color: #2980b9;
+}
+
+/* Section pour afficher le statut du jeu */
+#turn {
+    font-weight: bold;
+    color: #2ecc71;
+    font-size: 20px;
+}
+
+#startGame {
+    background-color: #2ecc71;
+}
+
+#startGame:hover {
+    background-color: #27ae60;
+}
+
+/* Style pour les messages */
+#message {
+    font-size: 18px;
+    color: #e74c3c;
+    margin-top: 20px;
+}

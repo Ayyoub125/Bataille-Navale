@@ -1,0 +1,117 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const gridSize = 10;
+    const playerGrid = document.getElementById("playerGrid");
+    const enemyGrid = document.getElementById("enemyGrid");
+    const turnDisplay = document.getElementById("turn");
+    const startButton = document.getElementById("startGame");
+    const messageDisplay = document.getElementById("message");
+    
+    let playerBoard = [];
+    let enemyBoard = [];
+    let currentPlayer = "Joueur";
+    let playerShips = 5; // Nombre de navires pour chaque joueur
+    let enemyShips = 5;
+
+    // Créer une grille
+    function createGrid(gridElement, isPlayerGrid) {
+        const board = [];
+        gridElement.innerHTML = '';
+        for (let i = 0; i < gridSize * gridSize; i++) {
+            const cell = document.createElement('div');
+            cell.dataset.index = i;
+            cell.classList.add('empty');
+            gridElement.appendChild(cell);
+            cell.addEventListener('click', () => handleCellClick(i, gridElement, isPlayerGrid, board));
+        }
+        return board;
+    }
+
+    // Initialiser le jeu
+    function startGame() {
+        playerBoard = createGrid(playerGrid, true); // Créer la grille du joueur
+        enemyBoard = createGrid(enemyGrid, false); // Créer la grille de l'adversaire
+
+        placeShips(playerBoard); // Placer les navires sur la grille du joueur
+        placeShips(enemyBoard); // Placer les navires sur la grille de l'adversaire
+        
+        currentPlayer = "Joueur";
+        turnDisplay.textContent = "Tour : " + currentPlayer;
+        messageDisplay.textContent = '';
+    }
+
+    // Placer les navires aléatoirement
+    function placeShips(board) {
+        let shipsPlaced = 0;
+        while (shipsPlaced < playerShips) {
+            const randomIndex = Math.floor(Math.random() * gridSize * gridSize);
+            const randomCell = board[randomIndex];
+            if (!randomCell.classList.contains('ship')) {
+                randomCell.classList.add('ship');
+                shipsPlaced++;
+            }
+        }
+    }
+
+    // Gérer le clic sur une cellule
+    function handleCellClick(index, gridElement, isPlayerGrid, board) {
+        if (isPlayerGrid) {
+            messageDisplay.textContent = "C'est votre tour, vous ne pouvez pas tirer sur votre propre grille !";
+            return;
+        }
+
+        const cell = gridElement.children[index];
+        if (currentPlayer === "Joueur") {
+            if (cell.classList.contains('ship')) {
+                cell.classList.remove('ship');
+                cell.classList.add('hit');
+                enemyShips--;
+                messageDisplay.textContent = "Touché !";
+            } else {
+                cell.classList.add('miss');
+                messageDisplay.textContent = "Tir manqué.";
+            }
+
+            // Vérifier si le joueur a gagné
+            if (enemyShips === 0) {
+                messageDisplay.textContent = "Félicitations, vous avez gagné !";
+                return;
+            }
+
+            currentPlayer = "Adversaire";
+            turnDisplay.textContent = "Tour : " + currentPlayer;
+            setTimeout(enemyTurn, 1000); // L'adversaire joue après un délai
+        }
+    }
+
+    // Tour de l'adversaire
+    function enemyTurn() {
+        let randomIndex = Math.floor(Math.random() * gridSize * gridSize);
+        const cell = enemyGrid.children[randomIndex];
+        if (!cell.classList.contains('hit') && !cell.classList.contains('miss')) {
+            if (cell.classList.contains('ship')) {
+                cell.classList.remove('ship');
+                cell.classList.add('hit');
+                playerShips--;
+                messageDisplay.textContent = "L'adversaire vous a touché !";
+            } else {
+                cell.classList.add('miss');
+                messageDisplay.textContent = "L'adversaire a raté son tir.";
+            }
+
+            // Vérifier si l'adversaire a gagné
+            if (playerShips === 0) {
+                messageDisplay.textContent = "Dommage, vous avez perdu !";
+                return;
+            }
+
+            currentPlayer = "Joueur";
+            turnDisplay.textContent = "Tour : " + currentPlayer;
+        }
+    }
+
+    // Initialisation de l'événement pour démarrer le jeu
+    startButton.addEventListener('click', startGame);
+
+    // Créer les grilles au démarrage
+    startGame();
+});

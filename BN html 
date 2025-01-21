@@ -1,0 +1,102 @@
+# bataille-navale html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bataille Navale</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 40px);
+            grid-template-rows: repeat(10, 40px);
+            gap: 2px;
+            margin: 20px auto;
+        }
+        .grid div {
+            width: 40px;
+            height: 40px;
+            background-color: lightblue;
+            border: 1px solid #ccc;
+            display: inline-block;
+        }
+        .grid .ship {
+            background-color: gray;
+        }
+        .grid .hit {
+            background-color: red;
+        }
+        .grid .miss {
+            background-color: lightgray;
+        }
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        #game-info {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Bataille Navale</h1>
+
+    <div id="game-info">
+        <p>Tour : <span id="turn">Joueur</span></p>
+        <button id="startGame" class="button">Commencer la Partie</button>
+    </div>
+
+    <h2>Votre grille</h2>
+    <div id="playerGrid" class="grid">
+        <!-- La grille du joueur sera générée ici -->
+    </div>
+
+    <h2>Grille de l'adversaire</h2>
+    <div id="enemyGrid" class="grid">
+        <!-- La grille de l'adversaire sera générée ici -->
+    </div>
+
+    <script>
+        const gridSize = 10; // Taille de la grille (10x10)
+        const playerGrid = document.getElementById("playerGrid");
+        const enemyGrid = document.getElementById("enemyGrid");
+        const startButton = document.getElementById("startGame");
+        const turnDisplay = document.getElementById("turn");
+
+        // Fonction pour générer la grille
+        function createGrid(gridElement) {
+            gridElement.innerHTML = ''; // Réinitialiser la grille
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const cell = document.createElement('div');
+                cell.dataset.index = i; // Ajouter un index pour identifier la cellule
+                gridElement.appendChild(cell);
+            }
+        }
+
+        // Fonction pour commencer la partie
+        function startGame() {
+            // Réinitialiser les grilles
+            createGrid(playerGrid);
+            createGrid(enemyGrid);
+            // Réinitialiser le tour à "Joueur"
+            turnDisplay.textContent = "Joueur";
+        }
+
+        // Initialisation du jeu
+        startButton.addEventListener('click', startGame);
+
+        // Créer les grilles au démarrage
+        createGrid(playerGrid);
+        createGrid(enemyGrid);
+    </script>
+
+</body>
+</html>
+
