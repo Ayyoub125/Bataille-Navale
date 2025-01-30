@@ -23,7 +23,6 @@ def placer_bateau(taille_bateau):
     horizontal = random.choice([True, False])
     
     if horizontal:
-        x = random.randint(0, len(grille) - 1)
         y = random.randint(0, len(grille[0]) - taille_bateau)
         for i in range(taille_bateau):
             grille[x][y + i] = 1
