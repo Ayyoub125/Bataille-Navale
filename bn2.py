@@ -18,6 +18,34 @@ grille = [
 tailles_bateaux = [3, 4, 2]  # Bateaux du premier joueur
 tailles_bateaux2 = [3, 4, 2]  # Bateaux du deuxième joueur
 
+def placer_bateau(taille_bateau):
+    horizontal = random.choice([True, False])
+    
+    if horizontal:
+        y = random.randint(0, len(grille[0]) - taille_bateau)
+        for i in range(taille_bateau):
+            grille[x][y + i] = 1
+    else:
+        x = random.randint(0, len(grille) - taille_bateau)
+        y = random.randint(0, len(grille[0]) - 1)
+        for i in range(taille_bateau):
+            grille[x + i][y] = 1
+
+ def placer_bateau2(taille_bateau):
+     horizontal = random.choice([True, False])
+    
+     if horizontal:
+         x = random.randint(0, len(grille) - 1)
+         y = random.randint(0, len(grille[0]) - taille_bateau)
+         for i in range(taille_bateau):
+             grille[x][y + i] = 2
+     else:
+         x = random.randint(0, len(grille) - taille_bateau)
+         y = random.randint(0, len(grille[0]) - 1)
+         for i in range(taille_bateau):
+             grille[x + i][y] = 2
+
+
 def peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
     """
     Vérifie si on peut placer un bateau à un certain endroit sans dépasser la grille ni chevaucher un autre bateau.
