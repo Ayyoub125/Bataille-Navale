@@ -1,6 +1,12 @@
 import random
 
 # Grille de jeu (10x10)
+"""
+def init_liste(n):
+    for i in range(n):
+        liste.append([]):
+        liste.append(0)
+   """         
 grille = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -15,36 +21,28 @@ grille = [
 ]
 
 # Tailles des bateaux à placer
-tailles_bateaux = [3, 4, 2]  # Bateaux du premier joueur
-tailles_bateaux2 = [3, 4, 2]  # Bateaux du deuxième joueur
+#tailles_bateaux = [3, 4, 2]  # Bateaux du premier joueur
+#tailles_bateaux2 = [3, 4, 2]  # Bateaux du deuxième joueur
 
-def placer_bateau(taille_bateau):
+def placer_bateau(grille, taille_bateau):
+        x = int(input)
+        y = int(input)
+        
+           
+
+def placer_bateau2(grille, taille_bateau):
     horizontal = random.choice([True, False])
     
     if horizontal:
+        x = random.randint(0, len(grille) - 1)
         y = random.randint(0, len(grille[0]) - taille_bateau)
         for i in range(taille_bateau):
-            grille[x][y + i] = 1
+            grille[x][y + i] = 2
     else:
         x = random.randint(0, len(grille) - taille_bateau)
         y = random.randint(0, len(grille[0]) - 1)
         for i in range(taille_bateau):
-            grille[x + i][y] = 1
-
- def placer_bateau2(taille_bateau):
-     horizontal = random.choice([True, False])
-    
-     if horizontal:
-         x = random.randint(0, len(grille) - 1)
-         y = random.randint(0, len(grille[0]) - taille_bateau)
-         for i in range(taille_bateau):
-             grille[x][y + i] = 2
-     else:
-         x = random.randint(0, len(grille) - taille_bateau)
-         y = random.randint(0, len(grille[0]) - 1)
-         for i in range(taille_bateau):
-             grille[x + i][y] = 2
-
+            grille[x + i][y] = 2
 
 def peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
     """
@@ -76,13 +74,11 @@ def afficher_grille(grille):
     for ligne in grille:
         print(ligne)
 
-
 def jouer():
     """
     Permet de jouer 
     """
     while True:
-        
         # Demande les coordonnées du tir pour le joueur 1
         x = int(input("Entrez la ligne (0-9) pour le tir du joueur 1 : "))
         y = int(input("Entrez la colonne (0-9) pour le tir du joueur 1 : "))
@@ -91,12 +87,12 @@ def jouer():
             grille[x][y] = 'X'  # Met un 'X' si tir raté
             afficher_grille(grille)
             print("Coup dans l'eau")
-        elif grille[x][y] == 1 or grille[x][y] == 2:
+        elif grille[x][y] == 2:
             grille[x][y] = 'O'  # Met un 'O' si tir touché
             afficher_grille(grille)
             print("Touché")
         else:
-            print("Cet endroit a déjà été tiré.")
+            print("Cet endroit a déjà été tiré ou tu ne peux pas tirer sur ton bateau")
 
         # Demande les coordonnées du tir pour le joueur 2
         x = int(input("Entrez la ligne (0-9) pour le tir du joueur 2 : "))
@@ -106,12 +102,15 @@ def jouer():
             grille[x][y] = 'X'  # Met un 'X' si tir raté
             afficher_grille(grille)
             print("Coup dans l'eau")
-        elif grille[x][y] == 1 or grille[x][y] == 2:
+        elif grille[x][y] == 1:
             grille[x][y] = 'O'  # Met un 'O' si tir touché
             afficher_grille(grille)
             print("Touché")
         else:
-            print("Cet endroit a déjà été tiré.")
+            print("Cet endroit a déjà été tiré ou tu ne peux pas tirer sur ton bateau")
+
+
+
         
 # Place les bateaux du premier joueur
 for taille in tailles_bateaux:
@@ -126,3 +125,4 @@ afficher_grille(grille)
 
 # Lancer le jeu
 jouer()
+
