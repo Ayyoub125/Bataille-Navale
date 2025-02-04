@@ -1,0 +1,30 @@
+import tkinter as tk
+
+def tirer(i, j, tableau):
+    """Logique pour tirer sur une case"""
+    bouton = tk.Grid.grid_slaves(row=i, column=j)[0]
+    if tableau[i][j] == "E":
+        bouton.config(text="O", bg="blue")  # Eau
+    elif tableau[i][j] == "B":
+        bouton.config(text="X", bg="red")  # Bateau coulé
+    else:
+        bouton.config(text="!", bg="yellow")  # Case déjà tirée
+
+# Créer la fenêtre principale Tkinter
+fenetre = tk.Tk()
+fenetre.title("Bataille Navale")
+
+# Tableau de jeu 10x10
+tableau = [["E"] * 10 for _ in range(10)]
+
+# Création de la grille de boutons
+for i in range(10):
+    for j in range(10):
+        bouton = tk.Button(fenetre, text=" ", width=4, height=2)
+        bouton.grid(row=i, column=j)
+        bouton.config(command=lambda i=i, j=j: tirer(i, j, tableau)) # lambda est utilisé pour définir des fct
+                                                                     # anonymes-> qui renvoie la valeur de
+                                                                     # l'esxpression évaluée comme n'importe
+                                                                     # quelle fct Python
+# Lancer l'application Tkinter
+fenetre.mainloop()
