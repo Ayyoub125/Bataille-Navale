@@ -126,3 +126,7 @@ afficher_grille(grille)
 # Lancer le jeu
 jouer()
 
+
+DIEGO EST UN GORS ENCULÉ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
