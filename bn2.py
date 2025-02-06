@@ -126,9 +126,7 @@ afficher_grille(grille)
 # Lancer le jeu
 jouer()
 
-
-DIEGO EST UN GROS ENCULÉ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 CLEMENT CE GROS CHIEN LA ARRETE DE METTRE DU KK 
+CLEMENT Y FAIT QUE D'UTILISER CHATGPT
 
 
