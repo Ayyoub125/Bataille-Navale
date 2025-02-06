@@ -127,6 +127,6 @@ afficher_grille(grille)
 jouer()
 
 
-DIEGO EST UN GORS ENCULÉ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+DIEGO EST UN GROS ENCULÉ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
