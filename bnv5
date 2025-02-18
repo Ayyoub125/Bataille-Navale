@@ -1,18 +1,16 @@
 import random
 
 # Grille de jeu (modulable)
-grille = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-]
+def grille1():
+    grille = []
+    nb_colonne = int(input(" -Entrez combien de colonne voulez vous ? "))
+    nb_ligne = int(input(" -Entrez combien de ligne voulez vous ? "))
+    
+    grille = [ [0] * nb_ligne for i in range(nb_colonne) ]
+
+    return print(grille)
+
+grille1() 
 
 # Tailles des bateaux à placer
 def bateau():
@@ -49,12 +47,6 @@ def placer_bateau(grille, taille_bateau, joueur):
         for i in range(taille_bateau):
             grille[x + i][y] = joueur
 
-    if peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
-        
-        
-
-
-    
 
 def peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
     """
@@ -142,5 +134,3 @@ afficher_grille(grille)
 
 # Lancer le jeu
 jouer()
-
-
