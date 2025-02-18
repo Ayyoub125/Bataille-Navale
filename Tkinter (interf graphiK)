@@ -2,10 +2,11 @@ import tkinter as tk
 
 def tirer(i, j, tableau):
     """Logique pour tirer sur une case"""
-    bouton = tk.Grid.grid_slaves(row=i, column=j)[0]
-    couleurs = {"E": ("O", "blue"), "B": ("X", "red")}
+    bouton = fenetre.grid_slaves(row=i, column=j)[0] 
+    couleurs = {"E": ("O", "cornflowerblue"), "B": ("X", "red")}
     text, bg = couleurs.get(tableau[i][j], ("!", "yellow"))
     bouton.config(text=text, bg=bg)
+
 
 # Créer la fenêtre principale Tkinter
 fenetre = tk.Tk()
@@ -17,9 +18,11 @@ tableau = [["E"] * 10 for _ in range(10)]
 # Création de la grille de boutons
 for i in range(10):
     for j in range(10):
-        bouton = tk.Button(fenetre, text=" ", width=4, height=2)
-        bouton.grid(row=i, column=j)
-        bouton.config(command=lambda i=i, j=j: tirer(i, j, tableau))
+        tk.Button(fenetre, text=" ", width=4, height=2, 
+                  command=lambda i=i, j=j: tirer(i, j, tableau)).grid(row=i, column=j)
 
 # Lancer l'application Tkinter
 fenetre.mainloop()
+
+# ATTENTION :
+# command = lambda, pas facile à comprendre... On peut faire sans ?
