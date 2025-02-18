@@ -1,20 +1,34 @@
 import random
 
 # Grille de jeu (modulable)
-liste = []
-
-def init_liste(ligne : int() ,colonne : int() ):
-        for i in range(colonne):
-                liste.append([])
-        for i in range (colonne):
-            for j in range(ligne):
-                        liste[i].append(0)
-        print(liste)
-    
-
+grille = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+]
 
 # Tailles des bateaux à placer
-tailles_bateaux = [3, 4, 2] 
+def bateau():
+    tailles_bateaux = []
+
+    nb_bateau = int(input(" -Entrez combien de bateau voulez vous ? "))
+
+    for i in range(nb_bateau):
+        taille = int(input(" -Entrez la taille du/des bateaux "))
+
+        tailles_bateaux.append(taille)
+        
+    return tailles_bateaux
+
+
+taille_bateaux = bateau()
 
 def placer_bateau(grille, taille_bateau, joueur):
     """
@@ -34,6 +48,13 @@ def placer_bateau(grille, taille_bateau, joueur):
         y = random.randint(0, len(grille[0]) - 1)
         for i in range(taille_bateau):
             grille[x + i][y] = joueur
+
+    if peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
+        
+        
+
+
+    
 
 def peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
     """
@@ -111,8 +132,9 @@ def jouer():
         else:
             print("Cet endroit a déjà été tiré ou tu ne peux pas tirer sur ton bateau")
 
+
 for joueur in range(1, 3):
-    for taille in tailles_bateaux:
+    for taille in taille_bateaux:
         placer_bateau(grille, taille, joueur)
 
 # Affiche la grille après placement des bateaux
@@ -120,3 +142,5 @@ afficher_grille(grille)
 
 # Lancer le jeu
 jouer()
+
+
