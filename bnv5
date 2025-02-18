@@ -1,18 +1,17 @@
 import random
 
-# Grille de jeu (10x10)
-grille = [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-]
+# Grille de jeu (modulable)
+liste = []
+
+def init_liste(ligne : int() ,colonne : int() ):
+        for i in range(colonne):
+                liste.append([])
+        for i in range (colonne):
+            for j in range(ligne):
+                        liste[i].append(0)
+        print(liste)
+    
+
 
 # Tailles des bateaux à placer
 tailles_bateaux = [3, 4, 2] 
