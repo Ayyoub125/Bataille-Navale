@@ -7,7 +7,7 @@
 ##################################################################################
 
 """
-Ce programme est une implémentation simple d'un jeu de bataille navale pour deux joueurs.
+Ce programme est une suite simple d'un jeu de bataille navale pour deux joueurs.
 Les joueurs placent leurs bateaux sur une grille, puis alternent pour tirer sur la grille
 de l'adversaire jusqu'à ce que tous les bateaux soient coulés.
 """
@@ -48,7 +48,7 @@ def peut_placer(grille, x, y, taille, horizontal):
     sur la grille, soit horizontalement, soit verticalement.
     Elle retourne True si le placement est possible, False sinon.
     """
-    # Vérifie si le bateau dépasse la grille ou chevauche un autre bateau
+    # Vérifie si le bateau dépasse la grille ou passe sur un autre bateau
     for i in range(taille):
         if horizontal:
             if y + i >= len(grille[0]) or grille[x][y + i] != 0:
