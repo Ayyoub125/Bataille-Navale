@@ -1,3 +1,11 @@
+##################################################################################
+#                                                                                #
+#                                                                                #
+#            ~ Voici l'interface graphique de notre bataille navale ~            #
+#                                                                                #
+#                                                                                #
+##################################################################################
+
 import tkinter as tk
 from tkinter import messagebox
 
@@ -94,3 +102,4 @@ str_joueur.grid(row=10, column=0, columnspan=10)  # Place le str en bas de la gr
 
 # Lancer l'application Tkinter
 fenetre.mainloop()
+
