@@ -1,37 +1,28 @@
-# Grille de jeu (modulable)
 # Fonction pour créer la grille
-def grille1():
-    grille = []
-    nb_colonne = int(input(" - Entrez combien de colonnes voulez-vous ? "))
-    nb_ligne = int(input(" - Entrez combien de lignes voulez-vous ? "))
+def creer_grille():
+    # Demande le nombre de lignes et de colonnes
+    lignes = int(input(" - Entrez le nombre de lignes : "))
+    colonnes = int(input(" - Entrez le nombre de colonnes : "))
     
-    grille = [[0] * nb_ligne for _ in range(nb_colonne)]
+    # Crée une grille remplie de 0
+    grille = [[0 for _ in range(colonnes)] for _ in range(lignes)]
     return grille
 
-# Fonction pour définir les tailles des bateaux
-def bateau():
-    tailles_bateaux = []
-    nb_bateau = int(input(" - Entrez combien de bateaux voulez-vous ? "))
+# Fonction pour demander les tailles des bateaux
+def demander_bateaux():
+    tailles = []
+    nb_bateaux = int(input(" - Combien de bateaux voulez-vous ? "))
 
-    for i in range(nb_bateau):
-        taille = int(input(f" - Entrez la taille du bateau {i+1} : "))
-        tailles_bateaux.append(taille)
-        
-    return tailles_bateaux
+    for i in range(nb_bateaux):
+        taille = int(input(f" - Taille du bateau {i+1} : "))
+        tailles.append(taille)
+    
+    return tailles
 
 # Fonction pour vérifier si un bateau peut être placé
-def peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
-    """
-    Vérifie si on peut placer un bateau à un certain endroit sans dépasser la grille ni chevaucher un autre bateau.
-    
-    Paramètres :
-      - grille : la grille de jeu
-      - x : la ligne de départ
-      - y : la colonne de départ
-      - taille_bateau : la taille du bateau
-      - horizontal : True si le bateau est horizontal, False si vertical
-    """
-    for i in range(taille_bateau):
+def peut_placer(grille, x, y, taille, horizontal):
+    # Vérifie si le bateau dépasse la grille ou chevauche un autre bateau
+    for i in range(taille):
         if horizontal:
             if y + i >= len(grille[0]) or grille[x][y + i] != 0:
                 return False
@@ -40,48 +31,41 @@ def peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
                 return False
     return True
 
-# Fonction pour placer un bateau sur la grille
-def placer_bateau(grille, taille_bateau, joueur):
-    """
-    Place un bateau sur la grille.
-    Si joueur == 1, le bateau sera marqué par 1.
-    Si joueur == 2, le bateau sera marqué par 2.
-    """
-    print(f"Joueur {joueur}, placez un bateau de taille {taille_bateau}")
+# Fonction pour placer un bateau
+def placer_bateau(grille, taille, joueur):
+    print(f"Joueur {joueur}, placez un bateau de taille {taille}")
     while True:
-        x = int(input(f"Entrez la ligne (0-{len(grille)-1}) : "))
-        y = int(input(f"Entrez la colonne (0-{len(grille[0])-1}) : "))
-        horizontal = input("Voulez-vous placer le bateau horizontalement ? (o/n) : ").lower() == 'o'
+        # Demande les coordonnées
+        x = int(input(f" - Ligne (0-{len(grille)-1}) : "))
+        y = int(input(f" - Colonne (0-{len(grille[0])-1}) : "))
+        horizontal = input(" - Horizontal ? (o/n) : ").lower() == 'o'
 
-        if peut_placer_bateau(grille, x, y, taille_bateau, horizontal):
-            for i in range(taille_bateau):
+        # Vérifie si le placement est possible
+        if peut_placer(grille, x, y, taille, horizontal):
+            # Place le bateau
+            for i in range(taille):
                 if horizontal:
                     grille[x][y + i] = joueur
                 else:
                     grille[x + i][y] = joueur
             break
         else:
-            print("Placement impossible. réessayez !")
+            print("Placement impossible. Réessayez.")
 
 # Fonction pour afficher la grille
 def afficher_grille(grille):
-    """
-    Affiche la grille.
-    """
+    print("Grille :")
     for ligne in grille:
         print(" ".join(str(cell) for cell in ligne))
     print()
 
 # Fonction principale pour jouer
 def jouer(grille):
-    """
-    Permet de jouer.
-    """
     while True:
         # Tour du joueur 1
         print("Tour du Joueur 1")
-        x = int(input("Entrez la ligne pour le tir : "))
-        y = int(input("Entrez la colonne pour le tir : "))
+        x = int(input(" - Ligne pour tirer : "))
+        y = int(input(" - Colonne pour tirer : "))
 
         if grille[x][y] == 0:
             grille[x][y] = 'X'
@@ -90,13 +74,13 @@ def jouer(grille):
             grille[x][y] = 'O'
             print("Touché !")
         else:
-            print("Cet endroit a déjà été tiré ou tu ne peux pas tirer sur ton bateau.")
+            print("Déjà tiré ici ou bateau du Joueur 1.")
         afficher_grille(grille)
 
         # Tour du joueur 2
         print("Tour du Joueur 2")
-        x = int(input("Entrez la ligne pour le tir : "))
-        y = int(input("Entrez la colonne pour le tir : "))
+        x = int(input(" - Ligne pour tirer : "))
+        y = int(input(" - Colonne pour tirer : "))
 
         if grille[x][y] == 0:
             grille[x][y] = 'X'
@@ -105,19 +89,28 @@ def jouer(grille):
             grille[x][y] = 'O'
             print("Touché !")
         else:
-            print("Cet endroit a déjà été tiré ou tu ne peux pas tirer sur ton bateau.")
+            print("Déjà tiré ici ou bateau du Joueur 2.")
         afficher_grille(grille)
 
-# Création de la grille et des bateaux
-grille = grille1()
-taille_bateaux = bateau()
+# Programme principal
+print("Bienvenue dans notre Bataille Navale !")
+
+# Crée la grille
+grille = creer_grille()
+
+# Demande les tailles des bateaux
+tailles_bateaux = demander_bateaux()
 
 # Placement des bateaux pour chaque joueur
-for joueur in range(1, 3):
-    print(f"Placement des bateaux pour le Joueur {joueur}")
-    for taille in taille_bateaux:
+for joueur in [1, 2]:
+    print(f"\nPlacement des bateaux pour le Joueur {joueur}")
+    for taille in tailles_bateaux:
         placer_bateau(grille, taille, joueur)
     afficher_grille(grille)
+
+# Lancement du jeu
+print("\nDébut de la partie !")
+jouer(grille)
 
 # Lancement du jeu
 jouer(grille)
