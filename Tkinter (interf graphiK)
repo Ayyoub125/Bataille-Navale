@@ -1,28 +1,96 @@
 import tkinter as tk
+from tkinter import messagebox
 
-def tirer(i, j, tableau):
-    """Logique pour tirer sur une case"""
-    bouton = fenetre.grid_slaves(row=i, column=j)[0] 
-    couleurs = {"E": ("O", "cornflowerblue"), "B": ("X", "red")}
-    text, bg = couleurs.get(tableau[i][j], ("!", "yellow"))
-    bouton.config(text=text, bg=bg)
+def verifier_victoire(tableau):
+    """
+    Vérifie si tous les bateaux d'un joueur sont coulés.
 
+    Arguments:
+        tableau (list): La grille de jeu du joueur.
+
+    Retourne:
+        True si tous les bateaux sont coulés, False sinon.
+    """
+    for ligne in tableau:
+        if "B" in ligne:  # Si un bateau ("B") est encore présent
+            return False
+    return True  # Tous les bateaux sont coulés
+
+def tirer(i, j, tableau, bouton, joueur_actuel):
+    """
+    Gère le tir sur une case et met à jour l'interface.
+
+    Arguments:
+        i (int): La ligne de la case ciblée.
+        j (int): La colonne de la case ciblée.
+        tableau (list): La grille de jeu du joueur.
+        bouton (tk.Button): Le bouton correspondant à la case.
+        joueur_actuel (int): Le joueur qui effectue le tir (1 ou 2).
+    """
+    if tableau[i][j] == "B":  # Si un bateau est touché
+        bouton.config(text="X", bg="red")  # Marque la case en rouge avec un "X"
+        tableau[i][j] = "X"  # Met à jour la grille
+        if verifier_victoire(tableau):  # Vérifie si c'est la fin du jeu
+            messagebox.showinfo("Fin du jeu", f"Le Joueur {joueur_actuel} a gagné !")
+            fenetre.quit()  # Ferme la fenêtre
+    elif tableau[i][j] == "E":  # Si c'est un coup dans l'eau
+        bouton.config(text="O", bg="cornflowerblue")  # Marque la case en bleu avec un "O"
+        tableau[i][j] = "O"  # Met à jour la grille
+    else:  # Si la case a déjà été tirée
+        messagebox.showinfo("Erreur", "Vous avez déjà tiré ici !")
+
+def changer_joueur():
+    """
+    Alterne entre les deux joueurs.
+
+    Utilise une variable globale `joueur_actuel` pour suivre le tour actuel.
+    """
+    global joueur_actuel
+    joueur_actuel = 3 - joueur_actuel  # Alterne entre 1 et 2 (3-1=2, 3-2=1)
+    str_joueur.config(text=f"Tour du Joueur {joueur_actuel}")  # Met à jour le str
+
+def creer_callback(i, j, tableau, bouton):
+    """
+    Crée une fonction de rappel pour un bouton sans utiliser lambda.
+
+    Arguments:
+        i (int): La ligne de la case.
+        j (int): La colonne de la case.
+        tableau (list): La grille de jeu du joueur.
+        bouton (tk.Button): Le bouton correspondant à la case.
+
+    Retourne:
+        function: Une fonction de rappel pour le bouton.
+    """
+    def callback():
+        """
+        Fonction de rappel appelée lorsqu'un bouton est cliqué.
+        """
+        tirer(i, j, tableau, bouton, joueur_actuel)  # Gère le tir
+        changer_joueur()  # Change de joueur après le tir
+    return callback
 
 # Créer la fenêtre principale Tkinter
 fenetre = tk.Tk()
 fenetre.title("Bataille Navale")
 
-# Tableau de jeu 10x10
-tableau = [["E"] * 10 for _ in range(10)]
+# Tableaux de jeu pour chaque joueur
+tableau_j1 = [["E"] * 10 for _ in range(10)]  # Grille du Joueur 1 (E = Eau, B = Bateau)
+tableau_j2 = [["E"] * 10 for _ in range(10)]  # Grille du Joueur 2 (E = Eau, B = Bateau)
 
-# Création de la grille de boutons
+# Variables globales
+joueur_actuel = 1  # Commence avec le Joueur 1
+
+# Création de la grille de boutons pour le Joueur 1
 for i in range(10):
     for j in range(10):
-        tk.Button(fenetre, text=" ", width=4, height=2, 
-                  command=lambda i=i, j=j: tirer(i, j, tableau)).grid(row=i, column=j)
+        bouton = tk.Button(fenetre, text=" ", width=4, height=2)  # Crée un bouton
+        bouton.grid(row=i, column=j)  # Place le bouton dans la grille
+        bouton.config(command=creer_callback(i, j, tableau_j1, bouton)) # configure le bouton
+
+# str pour indiquer le tour du joueur
+str_joueur = tk.Label(fenetre, text=f"Tour du Joueur {joueur_actuel}", font=("Arial", 14))
+str_joueur.grid(row=10, column=0, columnspan=10)  # Place le str en bas de la grille
 
 # Lancer l'application Tkinter
 fenetre.mainloop()
-
-# ATTENTION :
-# command = lambda, pas facile à comprendre... On peut faire sans ?
