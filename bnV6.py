@@ -1,3 +1,12 @@
+##################################################################################
+#                                                                                #
+#                                                                                #
+#             ~ Voici la partie python de notre bataille navale ~                #
+#                                                                                #
+#                                                                                #
+##################################################################################
+
+
 # Fonction pour créer la grille
 def creer_grille():
     # Demande le nombre de lignes et de colonnes
