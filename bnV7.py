@@ -7,8 +7,8 @@
 ##################################################################################
 
 """
-Ce programme est une suite simple d'un jeu de bataille navale pour deux joueurs.
-Les joueurs placent leurs bateaux sur une grille, puis alternent pour tirer sur la grille
+Notre programme est une suite d'un jeu de bataille navale pour deux joueurs.
+Les 2 joueurs placent leurs bateaux sur une grille, puis a leur tour, tire sur la grille
 de l'adversaire jusqu'à ce que tous les bateaux soient coulés.
 """
 
@@ -16,7 +16,7 @@ de l'adversaire jusqu'à ce que tous les bateaux soient coulés.
 def creer_grille():
     """
     Cette fonction crée une grille de jeu vide en demandant à l'utilisateur le nombre de lignes et de colonnes.
-    La grille est représentée par une liste de listes, initialement remplie de 0.
+    La grille est représentée par une liste de liste, au début remplie de 0.
     """
     # Demande le nombre de lignes et de colonnes
     lignes = int(input(" - Entrez le nombre de lignes : "))
@@ -29,7 +29,7 @@ def creer_grille():
 # Fonction pour demander les tailles des bateaux
 def demander_bateaux():
     """
-    Cette fonction demande à l'utilisateur le nombre de bateaux et leur taille respective.
+    Cette fonction demande à l'utilisateur le nombre de bateaux et leur taille.
     Elle retourne une liste des tailles des bateaux.
     """
     tailles = []
@@ -89,7 +89,7 @@ def afficher_grille(grille):
     """
     Cette fonction affiche la grille de jeu actuelle.
     Les bateaux sont représentés par des numéros (1 pour le joueur 1, 2 pour le joueur 2),
-    les tirs manqués par 'X' et les tirs réussis par 'O'.
+    les tirs manqués marqués par 'X' et les tirs réussis marqués par 'O'.
     """
     print("Grille :")
     for ligne in grille:
