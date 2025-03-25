@@ -1,54 +1,63 @@
-##################################################################################
-#                                                                                #
-#                                                                                #
-#             ~ Voici la partie python de notre bataille navale ~                #
-#                                                                                #
-#                                                                                #
-##################################################################################
-
-"""
-Notre programme est une suite d'un jeu de bataille navale pour deux joueurs.
-Les 2 joueurs placent leurs bateaux sur une grille, puis a leur tour, tire sur la grille
-de l'adversaire jusqu'à ce que tous les bateaux soient coulés.
-"""
-
-# Fonction pour créer la grille
-def creer_grille():
+def creer_grille(lignes, colonnes):
     """
-    Cette fonction crée une grille de jeu vide en demandant à l'utilisateur le nombre de lignes et de colonnes.
-    La grille est représentée par une liste de liste, au début remplie de 0.
-    """
-    # Demande le nombre de lignes et de colonnes
-    lignes = int(input(" - Entrez le nombre de lignes : "))
-    colonnes = int(input(" - Entrez le nombre de colonnes : "))
+    Crée une grille vide avec des cases qui egal 0
     
-    # Crée une grille remplie de 0
-    grille = [[0 for _ in range(colonnes)] for _ in range(lignes)]
-    return grille
+    Paramètres :
+    - lignes : Le nombre de lignes de la grille
+    - colonnes : Le nombre de colonnes de la grille
+    
+    Renvoie :
+    - Une grille avec toutes les cases a 0
+    
+    """
+    return [[0 for _ in range(colonnes)] for _ in range(lignes)]
 
-# Fonction pour demander les tailles des bateaux
+def demander_taille_plateau():
+    """
+    Demande aux joueurs la taille du plateau de jeu ligne colonnes
+    
+    Renvoie :
+    - lignes : Le nombre de lignes du plateau
+    - colonnes : Le nombre de colonnes du plateau
+    """
+    lignes = int(input(" - Entrez le nombre de lignes du plateau : "))
+    while lignes < 2:
+        print("La taille minimale du plateau est 2")
+        lignes = int(input(" - Entrez le nombre de lignes du plateau : "))
+    colonnes = int(input(" - Entrez le nombre de colonnes du plateau : "))
+    while colonnes < 2:
+        print("La taille minimale du plateau est 2")
+        colonnes = int(input(" - Entrez le nombre de colonnes du plateau : "))
+    return lignes, colonnes
+
 def demander_bateaux():
     """
-    Cette fonction demande à l'utilisateur le nombre de bateaux et leur taille.
-    Elle retourne une liste des tailles des bateaux.
+    Demande combien de bateaux les joueurs veulent et leurs tailles
+    
+    Renvoie :
+    - tailles : Liste des tailles des bateaux
     """
     tailles = []
     nb_bateaux = int(input(" - Combien de bateaux voulez-vous ? "))
-
     for i in range(nb_bateaux):
         taille = int(input(f" - Taille du bateau {i+1} : "))
         tailles.append(taille)
-    
     return tailles
 
-# Fonction pour vérifier si un bateau peut être placé
 def peut_placer(grille, x, y, taille, horizontal):
     """
-    Cette fonction vérifie si un bateau de taille donnée peut être placé à la position (x, y)
-    sur la grille, soit horizontalement, soit verticalement.
-    Elle retourne True si le placement est possible, False sinon.
+    Vérifie si un bateau peut être placé à la position donnée
+    
+    Paramètres :
+    - grille : La grille de jeu
+    - x : La ligne où commencer
+    - y : La colonne où commencer
+    - taille : La taille du bateau
+    - horizontal : True si horizontal, False si vertical
+    
+    Renvoie :
+    - True si le bateau peut être placé, False sinon
     """
-    # Vérifie si le bateau dépasse la grille ou passe sur un autre bateau
     for i in range(taille):
         if horizontal:
             if y + i >= len(grille[0]) or grille[x][y + i] != 0:
@@ -58,97 +67,161 @@ def peut_placer(grille, x, y, taille, horizontal):
                 return False
     return True
 
-# Fonction pour placer un bateau
 def placer_bateau(grille, taille, joueur):
     """
-    Cette fonction permet à un joueur de placer un bateau sur la grille.
-    Elle demande les coordonnées et l'orientation du bateau, puis vérifie si le placement est possible.
-    Si c'est le cas, le bateau est placé sur la grille.
+    Demande au joueur de placer un bateau de taille donnée
+    
+    Paramètres :
+    - grille : La grille de jeu
+    - taille : La taille du bateau
+    - joueur : lidentifiant du joueur (1 ou 2)
     """
     print(f"Joueur {joueur}, placez un bateau de taille {taille}")
-    while True:
-        # Demande les coordonnées
+    placer = False
+    while placer == False:
         x = int(input(f" - Ligne (0-{len(grille)-1}) : "))
         y = int(input(f" - Colonne (0-{len(grille[0])-1}) : "))
-        horizontal = input(" - Horizontal ? (o/n) : ").lower() == 'o'
-
-        # Vérifie si le placement est possible
+        orientation = input(" - Orientation (h pour horizontal, v pour vertical) : ").lower()
+        horizontal = (orientation == 'h')
         if peut_placer(grille, x, y, taille, horizontal):
-            # Place le bateau
             for i in range(taille):
                 if horizontal:
                     grille[x][y + i] = joueur
                 else:
                     grille[x + i][y] = joueur
-            break
+            placer = True
         else:
-            print("Placement impossible. Réessayez.")
+            print("Placement impossible reessayez")
 
-# Fonction pour afficher la grille
-def afficher_grille(grille):
+def afficher_grille(grille, joueur):
     """
-    Cette fonction affiche la grille de jeu actuelle.
-    Les bateaux sont représentés par des numéros (1 pour le joueur 1, 2 pour le joueur 2),
-    les tirs manqués marqués par 'X' et les tirs réussis marqués par 'O'.
+    Affiche la grille du joueur avec les bateaux visibles et les cases vides.
+    
+    Paramètres :
+    - grille : La grille de jeu.
+    - joueur : L'identifiant du joueur (1 ou 2).
     """
-    print("Grille :")
     for ligne in grille:
-        print(" ".join(str(cell) for cell in ligne))
-    print()
+        for elt in ligne:
+            if elt == joueur:
+                print("B", end=" ")
+            elif elt == 0:
+                print("0", end=" ")
+            elif elt == 'X' or elt == 'O':
+                print(elt, end=" ")
+            else:
+                print("0", end=" ")
+        print()
 
-# Fonction principale pour jouer
-def jouer(grille):
+def a_encore_bateaux(grille, joueur):
     """
-    Cette fonction gère le déroulement du jeu. Les joueurs alternent pour tirer sur la grille
-    de l'adversaire. Le jeu continue jusqu'à ce que tous les bateaux soient coulés.
+    Vérifie si un joueur a encore des bateaux sur la grille
+    
+    
+    Paramètres :
+    - grille : La grille du joueur
+    - joueur : L'identifiant du joueur (1 ou 2).
+    
+    Renvoie :
+    - True si le joueur a encore des bateaux, False sinon.
     """
-    while True:
-        # Tour du joueur 1
-        print("Tour du Joueur 1")
-        x = int(input(" - Ligne pour tirer : "))
-        y = int(input(" - Colonne pour tirer : "))
+    for ligne in grille:
+        if joueur in ligne:
+            return True
+    return False
 
-        if grille[x][y] == 0:
-            grille[x][y] = 'X'
-            print("Coup dans l'eau !")
-        elif grille[x][y] == 2:
-            grille[x][y] = 'O'
-            print("Touché !")
+def demander_tir(joueur):
+    """
+    Demande ou le joueur veut tirer
+    
+    Paramètres :
+    - joueur : L'identifiant du joueur 1 ou 2
+    
+    Renvoie :
+    - x : La ligne où tirer.
+    - y : La colonne où tirer.
+    """
+    print(f"Joueur {joueur}, c'est a vous de tirer.")
+    x = int(input(" - Ligne pour tirer : "))
+    y = int(input(" - Colonne pour tirer : "))
+    return x, y
+
+def jouer(grille_j1, grille_j2):
+    """
+    Joue une partie entre les deux joueur
+    
+    Paramètres :
+    - grille_j1 : La grille du joueur 1.
+    - grille_j2 : La grille du joueur 2.
+    """
+    tour = 1
+    partie_terminee = False
+
+    while partie_terminee == False:
+        if tour == 1:
+            print("Tour du Joueur 1")
+            x, y = demander_tir(1)
+
+            while grille_j2[x][y] == 'X' or grille_j2[x][y] == 'O':
+                print("Vous avez déjà tiré ici, réessayez.")
+                x, y = demander_tir(1)
+
+            if grille_j2[x][y] == 0:
+                grille_j2[x][y] = 'X'
+                print("Coup dans l'eau !")
+            elif grille_j2[x][y] == 2:
+                grille_j2[x][y] = 'O'
+                print("Touché !")
+            
+            afficher_grille(grille_j2, 1)
+
+            if a_encore_bateaux(grille_j2, 2) == False:
+                print("Le Joueur 1 gagne !")
+                partie_terminee = True
+
+            tour = 2
         else:
-            print("Déjà tiré ici ou bateau du Joueur 1.")
-        afficher_grille(grille)
+            print("Tour du Joueur 2")
+            x, y = demander_tir(2)
 
-        # Tour du joueur 2
-        print("Tour du Joueur 2")
-        x = int(input(" - Ligne pour tirer : "))
-        y = int(input(" - Colonne pour tirer : "))
+            while grille_j1[x][y] == 'X' or grille_j1[x][y] == 'O':
+                print("Vous avez déjà tiré ici, réessayez.")
+                x, y = demander_tir(2)
 
-        if grille[x][y] == 0:
-            grille[x][y] = 'X'
-            print("Coup dans l'eau !")
-        elif grille[x][y] == 1:
-            grille[x][y] = 'O'
-            print("Touché !")
-        else:
-            print("Déjà tiré ici ou bateau du Joueur 2.")
-        afficher_grille(grille)
+            if grille_j1[x][y] == 0:
+                grille_j1[x][y] = 'X'
+                print("Coup dans l'eau !")
+            elif grille_j1[x][y] == 1:
+                grille_j1[x][y] = 'O'
+                print("Touché !")
 
-# Programme principal
-print("Bienvenue dans notre Bataille Navale !")
+            afficher_grille(grille_j1, 2)
 
-# Crée la grille
-grille = creer_grille()
+            if a_encore_bateaux(grille_j1, 1) == False:
+                print("Le Joueur 2 gagne !")
+                partie_terminee = True
 
-# Demande les tailles des bateaux
+            tour = 1
+
+print("Bienvenue dans notre jeu de Bataille Navale !")
+
+print("taille du plateau de jeu")
+lignes, colonnes = demander_taille_plateau()
+
+grille_j1 = creer_grille(lignes, colonnes)
+grille_j2 = creer_grille(lignes, colonnes)
+
 tailles_bateaux = demander_bateaux()
 
-# Placement des bateaux pour chaque joueur
-for joueur in [1, 2]:
-    print(f"\nPlacement des bateaux pour le Joueur {joueur}")
-    for taille in tailles_bateaux:
-        placer_bateau(grille, taille, joueur)
-    afficher_grille(grille)
+print("Placement des bateaux pour le Joueur 1")
+for taille in tailles_bateaux:
+    placer_bateau(grille_j1, taille, 1)
+afficher_grille(grille_j1, 1)
 
-# Lancement du jeu
-print("\nDébut de la partie !")
-jouer(grille)
+print("Placement des bateaux pour le Joueur 2")
+for taille in tailles_bateaux:
+    placer_bateau(grille_j2, taille, 2)
+afficher_grille(grille_j2, 2)
+
+print("Début de la partie !")
+jouer(grille_j1, grille_j2)
