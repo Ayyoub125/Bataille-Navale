@@ -1,0 +1,178 @@
+######## FUSION DES DEUX PROGRAMMES #########
+
+
+
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import simpledialog
+
+# Variables globales
+mode_tir_croix = False
+joueur_actuel = 1
+grilles = [[], []]
+tailles_bateaux = []
+fenetre = None
+
+def creer_grille(lignes=10, colonnes=10):
+    """Crée une grille de jeu vide."""
+    return [[0 for _ in range(colonnes)] for _ in range(lignes)]
+
+def demander_bateaux():
+    """Demande les tailles des bateaux à placer."""
+    tailles = []
+    nb_bateaux = simpledialog.askinteger("Nombre de bateaux", 
+                                       "Combien de bateaux voulez-vous ? (1-5)",
+                                       minvalue=1, maxvalue=5)
+    
+    for i in range(nb_bateaux):
+        taille = simpledialog.askinteger(f"Taille du bateau {i+1}", 
+                                       f"Taille du bateau {i+1} (1-5):",
+                                       minvalue=1, maxvalue=5)
+        tailles.append(taille)
+    
+    return tailles
+
+def peut_placer(grille, x, y, taille, horizontal):
+    """Vérifie si un bateau peut être placé à la position donnée."""
+    for i in range(taille):
+        if horizontal:
+            if y + i >= len(grille[0]) or grille[x][y + i] != 0:
+                return False
+        else:
+            if x + i >= len(grille) or grille[x + i][y] != 0:
+                return False
+    return True
+
+def placer_bateau_interface(grille, taille, joueur):
+    """Interface pour placer un bateau."""
+    messagebox.showinfo("Placement", f"Joueur {joueur}, placez un bateau de taille {taille}")
+    
+    while True:
+        reponse = simpledialog.askstring("Position", 
+                                       f"Bateau de taille {taille}: ligne(0-9) colonne(0-9) orientation(h/v)")
+        if not reponse:
+            continue
+            
+        try:
+            parts = reponse.split()
+            if len(parts) != 3:
+                raise ValueError
+                
+            x = int(parts[0])
+            y = int(parts[1])
+            horizontal = parts[2].lower() == 'h'
+            
+            if not (0 <= x <= 9) or not (0 <= y <= 9):
+                messagebox.showerror("Erreur", "Coordonnées invalides (0-9)")
+                continue
+                
+            if peut_placer(grille, x, y, taille, horizontal):
+                for i in range(taille):
+                    if horizontal:
+                        grille[x][y + i] = 1  # 1 représente un bateau
+                    else:
+                        grille[x + i][y] = 1
+                break
+            else:
+                messagebox.showerror("Erreur", "Placement impossible")
+        except (ValueError, IndexError):
+            messagebox.showerror("Erreur", "Format: ligne col orientation(h/v)")
+
+def verifier_victoire(grille):
+    """Vérifie si tous les bateaux sont coulés."""
+    for ligne in grille:
+        if 1 in ligne:  # 1 représente un bateau non touché
+            return False
+    return True
+
+def tirer(i, j, grille, bouton):
+    """Gère le tir sur une case."""
+    if grille[i][j] == 1:  # Bateau
+        bouton.config(text="X", bg="red")
+        grille[i][j] = "X"  # Bateau touché
+        if verifier_victoire(grille):
+            messagebox.showinfo("Fin", f"Joueur {joueur_actuel} gagne!")
+            fenetre.quit()
+    elif grille[i][j] == 0:  # Eau
+        bouton.config(text="O", bg="cornflowerblue")
+        grille[i][j] = "O"  # Tir dans l'eau
+    else:  # Déjà joué
+        messagebox.showinfo("Attention", "Case déjà jouée")
+
+def basculer_mode_tir():
+    """Change entre tir simple et tir en croix."""
+    global mode_tir_croix
+    mode_tir_croix = not mode_tir_croix
+    nouveau_mode = "Tir en croix" if mode_tir_croix else "Tir simple"
+    messagebox.showinfo("Mode de tir", f"Mode changé : {nouveau_mode}")
+
+def changer_joueur():
+    """Change de joueur."""
+    global joueur_actuel
+    joueur_actuel = 3 - joueur_actuel  # Alterne entre 1 et 2
+    str_joueur.config(text=f"Tour du Joueur {joueur_actuel}")
+
+def creer_callback(i, j, grille, bouton):
+    """Crée la fonction de rappel pour un bouton."""
+    def callback():
+        if mode_tir_croix:
+            for x, y in [(i,j), (i-1,j), (i+1,j), (i,j-1), (i,j+1)]:
+                if 0 <= x < 10 and 0 <= y < 10:
+                    bouton_cible = fenetre.grid_slaves(row=x, column=y)[0]
+                    tirer(x, y, grille, bouton_cible)
+        else:
+            tirer(i, j, grille, bouton)
+        changer_joueur()
+    return callback
+
+def initialiser_jeu():
+    """Initialise le jeu avec les grilles et les bateaux."""
+    global grilles, tailles_bateaux
+    
+    # Création des grilles
+    grilles[0] = creer_grille()  # Joueur 1
+    grilles[1] = creer_grille()  # Joueur 2
+    
+    # Demande des tailles des bateaux
+    tailles_bateaux = demander_bateaux()
+    
+    # Placement des bateaux
+    for joueur in [1, 2]:
+        messagebox.showinfo("Placement", f"Joueur {joueur}, placez vos bateaux.")
+        for taille in tailles_bateaux:
+            placer_bateau_interface(grilles[joueur-1], taille, joueur)
+
+def lancer_interface():
+    """Lance l'interface graphique du jeu."""
+    global fenetre, str_joueur
+    
+    fenetre = tk.Tk()
+    fenetre.title("Bataille Navale")
+    
+    # Création de la grille de boutons
+    for i in range(10):
+        for j in range(10):
+            bouton = tk.Button(fenetre, text=" ", width=4, height=2)
+            bouton.grid(row=i, column=j)
+            # On utilise la grille du joueur 2 comme cible initiale (car le joueur 1 commence)
+            bouton.config(command=creer_callback(i, j, grilles[1], bouton))
+    
+    # Affichage du tour
+    str_joueur = tk.Label(fenetre, text=f"Tour du Joueur {joueur_actuel}", font=("Arial", 14))
+    str_joueur.grid(row=10, column=0, columnspan=10)
+    
+    # Bouton pour changer le mode de tir
+    bouton_mode = tk.Button(fenetre, text="Changer mode de tir", command=basculer_mode_tir)
+    bouton_mode.grid(row=11, column=0, columnspan=10)
+    
+    fenetre.mainloop()
+
+def main():
+    """Fonction principale."""
+    messagebox.showinfo("Bienvenue", "Bienvenue dans la Bataille Navale!")
+    initialiser_jeu()
+    lancer_interface()
+
+if __name__ == "__main__":
+    main()
+
